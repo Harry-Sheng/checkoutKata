@@ -6,9 +6,22 @@ package com.checkoutKata;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.checkoutkata.CheckoutEngine;
+
 public class CheckoutTest {
+
     @Test
-    void basicTest() {
-        assertEquals(2, 1 + 1);
+    void totalPriceOfZeroItem() {
+        CheckoutEngine checkoutEngine = new CheckoutEngine();
+        checkoutEngine.scan("");
+        assertEquals(0, checkoutEngine.getTotal());
     }
+
+    @Test
+    void totalPriceOfOneItem() {
+        CheckoutEngine checkoutEngine = new CheckoutEngine();
+        checkoutEngine.scan("A");
+        assertEquals(50, checkoutEngine.getTotal());
+    }
+
 }
