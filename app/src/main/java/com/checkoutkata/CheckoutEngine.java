@@ -7,11 +7,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CheckoutEngine {
+    private Map<Character, RegularPricingRule> pricingRules;
+    private Map<Character, Integer> itemToQuantityMap;
 
-    private Map<Character, Integer> itemToCountMap;
-
-    public CheckoutEngine() {
-        itemToCountMap = new HashMap<>();
+    public CheckoutEngine(Map<Character, RegularPricingRule> pricingRules) {
+        this.itemToQuantityMap = new HashMap<>();
+        this.pricingRules = pricingRules;
     }
 
     public void scan(String items) {
@@ -20,19 +21,19 @@ public class CheckoutEngine {
         }
 
         for (char item : items.toCharArray()) {
-            itemToCountMap.put(item, itemToCountMap.getOrDefault(item, 0) + 1);
+            itemToQuantityMap.put(item, itemToQuantityMap.getOrDefault(item, 0) + 1);
         }
     }
 
     public int getTotal() {
         int total = 0;
 
-        for (Map.Entry<Character, Integer> entry : itemToCountMap.entrySet()) {
-            int count = entry.getValue();
-            int price = 50;
-            total += price * count;
+        for (Character item : itemToQuantityMap.keySet()) {
+            int quantity = itemToQuantityMap.get(item);
+            RegularPricingRule rule = pricingRules.get(item);
+            total += rule.calculatePrice(quantity);
         }
-        
+
         return total;
     }
 
