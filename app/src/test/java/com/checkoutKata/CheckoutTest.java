@@ -25,21 +25,22 @@ public class CheckoutTest {
     }
 
     /**
-     * Calculates the total price for a given sequence of items using a string.
-     * It uses the CheckoutEngine to scan each item and apply the pricing rules.
+     * Calculates the total price for a given string of item codes.
+     * It uses the CheckoutEngine to scan each code and apply the pricing rules.
      *
-     * @param items A string representing the items to be scanned. e.g "ABCD"
+     * @param items A string representing the item codes to scan (e.g., "ABCD").
      * @return The total price calculated based on the pricing rules.
      */
     private int calculatePrice(String items) {
         CheckoutEngine checkoutEngine = new CheckoutEngine(itemCodeToPricingRuleMap);
 
-        for (char item : items.toCharArray()) {
-            checkoutEngine.scan(String.valueOf(item));
+        for (char itemCode : items.toCharArray()) {
+            checkoutEngine.scan(String.valueOf(itemCode));
         }
 
         return checkoutEngine.getTotal();
     }
+
 
     @Test
     public void testTotalForZeroItem() {

@@ -23,26 +23,26 @@ public class CheckoutEngine {
      * @param pricingRules a map where the key is the item code
      *                     and the value is the pricing rule to apply.
      */
-    public CheckoutEngine(Map<String, PricingRule> itemToPricingRuleMap) {
+    public CheckoutEngine(Map<String, PricingRule> itemCodeToPricingRuleMap) {
         this.itemCodeToQuantityMap = new HashMap<>();
-        this.itemCodeToPricingRuleMap = itemToPricingRuleMap;
+        this.itemCodeToPricingRuleMap = itemCodeToPricingRuleMap;
     }
 
     /**
      * Scans one item, updating the internal count of the item.
      *
-     * @param item a string represent an item to scan.
+     * @param itemCode a string represent an item to scan.
      */
-    public void scan(String item) {
-        if (item == null || item.isEmpty()) {
+    public void scan(String itemCode) {
+        if (itemCode == null || itemCode.isEmpty()) {
             return;
         }
 
-        if (!itemCodeToPricingRuleMap.containsKey(item)) {
-            throw new IllegalArgumentException("Item " + item + " is not recognised.");
+        if (!itemCodeToPricingRuleMap.containsKey(itemCode)) {
+            throw new IllegalArgumentException("Item code" + itemCode + " is not recognised.");
         }
         
-        itemCodeToQuantityMap.put(item, itemCodeToQuantityMap.getOrDefault(item, 0) + 1);
+        itemCodeToQuantityMap.put(itemCode, itemCodeToQuantityMap.getOrDefault(itemCode, 0) + 1);
     }
 
     /**
@@ -54,9 +54,9 @@ public class CheckoutEngine {
         int total = 0;
 
         for (Map.Entry<String, Integer> entry : itemCodeToQuantityMap.entrySet()) {
-            String item = entry.getKey();
+            String itemCode = entry.getKey();
             int quantity = entry.getValue();
-            PricingRule rule = itemCodeToPricingRuleMap.get(item);
+            PricingRule rule = itemCodeToPricingRuleMap.get(itemCode);
             total += rule.calculatePrice(quantity);
         }
 
