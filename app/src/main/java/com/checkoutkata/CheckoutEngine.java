@@ -14,8 +14,8 @@ import com.checkoutkata.rules.PricingRule;
  */
 public class CheckoutEngine {
 
-    private final Map<Character, PricingRule> pricingRules;
-    private final Map<Character, Integer> itemToQuantityMap;
+    private final Map<String, PricingRule> itemToPricingRuleMap;
+    private final Map<String, Integer> itemToQuantityMap;
 
     /**
      * Constructor for CheckoutEngine.
@@ -23,24 +23,26 @@ public class CheckoutEngine {
      * @param pricingRules a map where the key is the item code
      *                     and the value is the pricing rule to apply.
      */
-    public CheckoutEngine(Map<Character, PricingRule> pricingRules) {
+    public CheckoutEngine(Map<String, PricingRule> itemToPricingRuleMap) {
         this.itemToQuantityMap = new HashMap<>();
-        this.pricingRules = pricingRules;
+        this.itemToPricingRuleMap = itemToPricingRuleMap;
     }
 
     /**
-     * Scans a string of items, updating the internal count of each item.
+     * Scans one item, updating the internal count of the item.
      *
-     * @param items a string where each character represent an item to scan.
+     * @param item a string represent an item to scan.
      */
-    public void scan(String items) {
-        if (items == null || items.isEmpty()) {
+    public void scan(String item) {
+        if (item == null || item.isEmpty()) {
             return;
         }
 
-        for (char item : items.toCharArray()) {
-            itemToQuantityMap.put(item, itemToQuantityMap.getOrDefault(item, 0) + 1);
+        if (!itemToPricingRuleMap.containsKey(item)) {
+            throw new IllegalArgumentException("Item " + item + " is not recognised.");
         }
+        
+        itemToQuantityMap.put(item, itemToQuantityMap.getOrDefault(item, 0) + 1);
     }
 
     /**
@@ -51,10 +53,10 @@ public class CheckoutEngine {
     public int getTotal() {
         int total = 0;
 
-        for (Map.Entry<Character, Integer> entry : itemToQuantityMap.entrySet()) {
-            Character item = entry.getKey();
+        for (Map.Entry<String, Integer> entry : itemToQuantityMap.entrySet()) {
+            String item = entry.getKey();
             int quantity = entry.getValue();
-            PricingRule rule = pricingRules.get(item);
+            PricingRule rule = itemToPricingRuleMap.get(item);
             total += rule.calculatePrice(quantity);
         }
 
