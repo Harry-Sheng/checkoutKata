@@ -13,15 +13,15 @@ import java.util.Map;
 
 public class CheckoutTest {
 
-    private Map<String, PricingRule> itemToPricingRuleMap;
+    private Map<String, PricingRule> itemCodeToPricingRuleMap;
 
     @BeforeEach
     public void setUp() {
-        itemToPricingRuleMap = new HashMap<>();
-        itemToPricingRuleMap.put("A", new BuyNForYPricingRule(50, 3, 130));
-        itemToPricingRuleMap.put("B", new BuyNForYPricingRule(30, 2, 45));
-        itemToPricingRuleMap.put("C", new RegularPricingRule(20));
-        itemToPricingRuleMap.put("D", new RegularPricingRule(15));
+        itemCodeToPricingRuleMap = new HashMap<>();
+        itemCodeToPricingRuleMap.put("A", new BuyNForYPricingRule(50, 3, 130));
+        itemCodeToPricingRuleMap.put("B", new BuyNForYPricingRule(30, 2, 45));
+        itemCodeToPricingRuleMap.put("C", new RegularPricingRule(20));
+        itemCodeToPricingRuleMap.put("D", new RegularPricingRule(15));
     }
 
     /**
@@ -32,7 +32,7 @@ public class CheckoutTest {
      * @return The total price calculated based on the pricing rules.
      */
     private int calculatePrice(String items) {
-        CheckoutEngine checkoutEngine = new CheckoutEngine(itemToPricingRuleMap);
+        CheckoutEngine checkoutEngine = new CheckoutEngine(itemCodeToPricingRuleMap);
 
         for (char item : items.toCharArray()) {
             checkoutEngine.scan(String.valueOf(item));
@@ -94,7 +94,7 @@ public class CheckoutTest {
 
     @Test
     public void testIncrementalTotalCalculation() {
-        CheckoutEngine checkoutEngine = new CheckoutEngine(itemToPricingRuleMap);
+        CheckoutEngine checkoutEngine = new CheckoutEngine(itemCodeToPricingRuleMap);
 
         assertEquals(0, checkoutEngine.getTotal());
         checkoutEngine.scan("A"); assertEquals(50, checkoutEngine.getTotal()); // 50
@@ -107,7 +107,7 @@ public class CheckoutTest {
 
     @Test
     public void testScanNothingThenAddItem() {
-        CheckoutEngine checkoutEngine = new CheckoutEngine(itemToPricingRuleMap);
+        CheckoutEngine checkoutEngine = new CheckoutEngine(itemCodeToPricingRuleMap);
         assertEquals(0, checkoutEngine.getTotal());
         checkoutEngine.scan("A");
         assertEquals(50, checkoutEngine.getTotal());
@@ -115,7 +115,7 @@ public class CheckoutTest {
 
     @Test
     public void testInvalidItemThrowsError() {
-        CheckoutEngine checkoutEngine = new CheckoutEngine(itemToPricingRuleMap);
+        CheckoutEngine checkoutEngine = new CheckoutEngine(itemCodeToPricingRuleMap);
         assertThrows(IllegalArgumentException.class, () -> {
             checkoutEngine.scan("1");  // invalid
         });
@@ -123,7 +123,7 @@ public class CheckoutTest {
 
     @Test
     public void testItemWithoutRuleThrowsError() {
-        CheckoutEngine checkoutEngine = new CheckoutEngine(itemToPricingRuleMap);
+        CheckoutEngine checkoutEngine = new CheckoutEngine(itemCodeToPricingRuleMap);
         assertThrows(IllegalArgumentException.class, () -> {
             checkoutEngine.scan("E");  // invalid
         });
@@ -134,7 +134,7 @@ public class CheckoutTest {
 
     @Test
     public void testValidAndInvalidMixThrowsError() {
-        CheckoutEngine checkoutEngine = new CheckoutEngine(itemToPricingRuleMap);
+        CheckoutEngine checkoutEngine = new CheckoutEngine(itemCodeToPricingRuleMap);
         checkoutEngine.scan("A"); assertEquals(50, checkoutEngine.getTotal()); //vaild
         assertThrows(IllegalArgumentException.class, () -> {
             checkoutEngine.scan("1");  // invalid

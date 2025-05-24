@@ -14,8 +14,8 @@ import com.checkoutkata.rules.PricingRule;
  */
 public class CheckoutEngine {
 
-    private final Map<String, PricingRule> itemToPricingRuleMap;
-    private final Map<String, Integer> itemToQuantityMap;
+    private final Map<String, PricingRule> itemCodeToPricingRuleMap;
+    private final Map<String, Integer> itemCodeToQuantityMap;
 
     /**
      * Constructor for CheckoutEngine.
@@ -24,8 +24,8 @@ public class CheckoutEngine {
      *                     and the value is the pricing rule to apply.
      */
     public CheckoutEngine(Map<String, PricingRule> itemToPricingRuleMap) {
-        this.itemToQuantityMap = new HashMap<>();
-        this.itemToPricingRuleMap = itemToPricingRuleMap;
+        this.itemCodeToQuantityMap = new HashMap<>();
+        this.itemCodeToPricingRuleMap = itemToPricingRuleMap;
     }
 
     /**
@@ -38,11 +38,11 @@ public class CheckoutEngine {
             return;
         }
 
-        if (!itemToPricingRuleMap.containsKey(item)) {
+        if (!itemCodeToPricingRuleMap.containsKey(item)) {
             throw new IllegalArgumentException("Item " + item + " is not recognised.");
         }
         
-        itemToQuantityMap.put(item, itemToQuantityMap.getOrDefault(item, 0) + 1);
+        itemCodeToQuantityMap.put(item, itemCodeToQuantityMap.getOrDefault(item, 0) + 1);
     }
 
     /**
@@ -53,10 +53,10 @@ public class CheckoutEngine {
     public int getTotal() {
         int total = 0;
 
-        for (Map.Entry<String, Integer> entry : itemToQuantityMap.entrySet()) {
+        for (Map.Entry<String, Integer> entry : itemCodeToQuantityMap.entrySet()) {
             String item = entry.getKey();
             int quantity = entry.getValue();
-            PricingRule rule = itemToPricingRuleMap.get(item);
+            PricingRule rule = itemCodeToPricingRuleMap.get(item);
             total += rule.calculatePrice(quantity);
         }
 
