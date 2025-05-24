@@ -28,13 +28,13 @@ public class CheckoutTest {
      * Calculates the total price for a given string of item codes.
      * It uses the CheckoutEngine to scan each code and apply the pricing rules.
      *
-     * @param items A string representing the item codes to scan (e.g., "ABCD").
+     * @param itemCodes A string representing the item codes to scan (e.g., "ABCD").
      * @return The total price calculated based on the pricing rules.
      */
-    private int calculatePrice(String items) {
+    private int calculatePrice(String itemCodes) {
         CheckoutEngine checkoutEngine = new CheckoutEngine(itemCodeToPricingRuleMap);
 
-        for (char itemCode : items.toCharArray()) {
+        for (char itemCode : itemCodes.toCharArray()) {
             checkoutEngine.scan(String.valueOf(itemCode));
         }
 
