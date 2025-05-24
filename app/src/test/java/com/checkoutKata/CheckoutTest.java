@@ -106,10 +106,29 @@ public class CheckoutTest {
     }
 
     @Test
+    public void testScanNothingThenAddItem() {
+        CheckoutEngine checkoutEngine = new CheckoutEngine(itemToPricingRuleMap);
+        assertEquals(0, checkoutEngine.getTotal());
+        checkoutEngine.scan("A");
+        assertEquals(50, checkoutEngine.getTotal());
+    }
+
+    @Test
     public void testInvalidItemThrowsError() {
         CheckoutEngine checkoutEngine = new CheckoutEngine(itemToPricingRuleMap);
         assertThrows(IllegalArgumentException.class, () -> {
             checkoutEngine.scan("1");  // invalid
+        });
+    }
+
+    @Test
+    public void testItemWithoutRuleThrowsError() {
+        CheckoutEngine checkoutEngine = new CheckoutEngine(itemToPricingRuleMap);
+        assertThrows(IllegalArgumentException.class, () -> {
+            checkoutEngine.scan("E");  // invalid
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            checkoutEngine.scan("a");  // invalid (should be case-sensitive)
         });
     }
 
